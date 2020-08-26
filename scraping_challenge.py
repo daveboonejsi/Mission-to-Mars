@@ -7,7 +7,7 @@ import datetime as dt
 
 def scrape_all():
     # Initiate headless driver for deployment
-    browser = Browser("chrome", executable_path="chromedriver", headless=True)
+    browser = Browser("chrome", executable_path="chromedriver", headless=False)
 
     news_title, news_paragraph = mars_news(browser)
 
@@ -17,7 +17,7 @@ def scrape_all():
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
-        "hempispheres": hemispheres(browser),
+        "hemispheres": hemispheres(browser),
         "last_modified": dt.datetime.now()
     }
 
@@ -106,7 +106,6 @@ def hemispheres(browser):
      # Visit URL
     url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
     browser.visit(url)
-
     hemisphere_image_urls = []
     #first get the list of all hemispheres
     links = browser.find_by_css('a.product-item h3')
@@ -130,7 +129,7 @@ def scrape_hemisphere(html_text):
 
     try:
         title_element = hemi_soup.find("h2", class_="title").get_text()
-        sample_element = hemi_soup.find("a", text="Sample").get("hred")
+        sample_element = hemi_soup.find("a", text="Sample").get("href")
     except AttributeError:
         title_element = None
         sample_element = None
